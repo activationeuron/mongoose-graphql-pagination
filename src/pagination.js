@@ -29,11 +29,14 @@ class Pagination {
     pagination = {},
     sort = {},
     projection,
+    populate = {}
   } = {}, options = {}) {
     this.promises = {};
 
     // Set the Model to use for querying.
     this.Model = Model;
+    this.path = populate.path;
+
 
     // Sets the options for deep merging criteria object.
     // If not set, will only merge plain objects, per `is-plain-object`.
@@ -81,7 +84,7 @@ class Pagination {
         .sort(this.sort.value)
         .limit(this.first.value)
         .collation(this.sort.collation)
-        .comment(this.createComment('getEdges'));
+        .comment(this.createComment('getEdges')).populate(this.path);
       return docs.map(doc => ({ node: doc, cursor: doc.id }));
     };
     if (!this.promises.edge) {
